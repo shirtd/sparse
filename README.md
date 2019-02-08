@@ -1,17 +1,17 @@
 # Sparse Filtrations
 
-An implementation of sparse filtrations from [A Geometric Perspective on Sparse Filtrations]{https://arxiv.org/abs/1506.03797}.
+An implementation of sparse filtrations from [A Geometric Perspective on Sparse Filtrations](https://arxiv.org/abs/1506.03797).
 
 ## Build
 
-While the construction of the sparse graph and simplices is self contained the [Dionysus]{http://mrzv.org/software/dionysus2/index.html} package is used to construct filtrations and compute persistent (co)homology.
+While the construction of the sparse graph and simplices is self contained the [Dionysus](http://mrzv.org/software/dionysus2/index.html) package is used to construct filtrations and compute persistent (co)homology.
 In order to install Dionysus you will need
 
     * CMake
     * GCC >= 5.4
     * Boost 1.55.
 
-On OSX GCC and CMake and Boost may all be installed with [Homebrew]{https://brew.sh/}
+On OSX GCC and CMake and Boost may all be installed with [Homebrew](https://brew.sh/)
 
     brew install gcc cmake boost
 
