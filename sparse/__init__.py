@@ -3,7 +3,7 @@ from itertools import combinations
 from functools import partial
 import numpy.linalg as la
 import dionysus as dio
-from util import *
+from sparse.util import *
 
 ''''''''''''
 ''' UTIL '''
@@ -27,7 +27,7 @@ def _add_cofaces(E, L, e, adj, dim, N, t):
     S = [(t, 2 * w)] if w < l else []
     if len(t) - 1 < dim:
         for v in N:
-            M = filter(lambda w: w in N, adj[v])
+            M = list(filter(lambda w: w in N, adj[v]))
             S = S + _add_cofaces(E, L, e, adj, dim, M, t + [v])
     return S
 
@@ -49,8 +49,8 @@ class SparseStruct:
     def __init__(self, data, eps=0.1, verbose=True):
         self.n, data = len(data), data
         self.L, self.perm = greedy_perm(data, verbose)
-        self.pmap = np.array(sorted(enumerate(self.perm), key=lambda (i, j): j))
-        self.l, self.data = map(lambda x: np.ceil(np.log2(x)), self.L), data[self.perm]
+        self.pmap = np.array(sorted(enumerate(self.perm), key=lambda x: x[1]))
+        self.l, self.data = list(map(lambda x: np.ceil(np.log2(x)), self.L)), data[self.perm]
         self.chl, self.par = {i : [] if i > 0 else [0] for i in range(self.n)}, {0 : 0}
         self.nbr = {i : set() if i > 0 else set([0]) for i in range(self.n)}
         self.kap, self.e = (eps ** 2 + 3. * eps + 2.) / eps, eps
@@ -58,14 +58,14 @@ class SparseStruct:
     def dpar(self, i): return self.d[i, self.par[i]]
     def lkap(self, i): return self.kap * 2 ** self.l[i]
     def pred(self, i): return min(range(i), key=lambda j: self.d[i, j])
-    def level(self, i): return filter(lambda j: self.l[j] == self.l[i], range(self.n))
-    def init_level(self, i): map(lambda k: self.par.update({k : k}), self.level(i))
+    def level(self, i): return list(filter(lambda j: self.l[j] == self.l[i], range(self.n)))
+    def init_level(self, i): list(map(lambda k: self.par.update({k : k}), self.level(i)))
     def do_par(self, i, k): return self.d[i, k] <= self.dpar(i) and self.l[k] > self.l[i]
-    def pred_par_nbr(self, i): return filter(lambda k: self.do_par(i, k), self.nbr[self.par[i]])
-    def init_par(self, i): map(lambda k: self.par.update({i : k}), self.pred_par_nbr(i))
+    def pred_par_nbr(self, i): return list(filter(lambda k: self.do_par(i, k), self.nbr[self.par[self.pred(i)]]))
+    def init_par(self, i): list(map(lambda k: self.par.update({i : k}), self.pred_par_nbr(i)))
     def par_nbr_chl(self, i): return set(k for l in self.nbr[self.par[i]] for k in self.chl[l])
-    def get_nbrs(self, i): return filter(lambda l: self.d[i, l] <= self.lkap(i), self.par_nbr_chl(i))
-    def add_nbr(self, i, k): map(lambda (a, b): self.nbr[a].add(b), ((i,k), (k,i)))
+    def get_nbrs(self, i): return list(filter(lambda l: self.d[i, l] <= self.lkap(i), self.par_nbr_chl(i)))
+    def add_nbr(self, i, k): list(map(lambda x: self.nbr[x[0]].add(x[1]), ((i,k), (k,i))))
     def insert(self, i):
         if i == 0: return
         if self.l[i] < self.l[i-1]:
@@ -75,7 +75,8 @@ class SparseStruct:
         self.nbr[i].add(i)
         self.chl[i].append(i)
         self.chl[self.par[i]].append(i)
-        map(lambda k: self.add_nbr(i, k), self.get_nbrs(i))
+        list(map(lambda k: self.add_nbr(i, k), self.get_nbrs(i)))
+        # print(self.nbr[i], self.chl[i], self.par[i])
 
 ''''''''''''''''''
 ''' GRAPH DEF  '''
@@ -100,7 +101,7 @@ class SparseGraph(SparseStruct):
             self.E[(i, j)] = a
             self.adj[i].append(j)
     def add_edges(self, i):
-        map(lambda j: self.add_edge(i, j), self.nbr[i])
+        list(map(lambda j: self.add_edge(i, j), self.nbr[i]))
     def construct_edges(self, verbose):
         frange = vrange(verbose, ' | build graph ')
         for i in frange(self.n):
@@ -121,7 +122,7 @@ class SparseRips(SparseGraph):
         frange = vrange(self.verbose, ' | find simplices ')
         S = np.concatenate(tmap(fun, self.n, frange))
         fiter = viter(self.verbose, ' | make filtration ')
-        F = dio.Filtration(map(lambda s: dio.Simplex(*s), fiter(S)))
+        F = dio.Filtration([dio.Simplex(*s) for s in fiter(S)])
         ftime = vtime(self.verbose, ' | sort filtration')
         ftime(F.sort)
         return F

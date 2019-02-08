@@ -7,11 +7,11 @@ An implementation of sparse filtrations from [A Geometric Perspective on Sparse 
 While the construction of the sparse graph and simplices is self contained the [Dionysus](http://mrzv.org/software/dionysus2/index.html) package is used to construct filtrations and compute persistent (co)homology.
 In order to install Dionysus you will need
 
-    * CMake
-    * GCC >= 5.4
-    * Boost 1.55.
+    - CMake
+    - GCC >= 5.4
+    - Boost 1.55.
 
-On OSX GCC and CMake and Boost may all be installed with [Homebrew](https://brew.sh/)
+On OSX GCC, CMake, and Boost may all be installed with [Homebrew](https://brew.sh/)
 
     brew install gcc cmake boost
 
@@ -23,7 +23,7 @@ To build the package and install requirements run the following from the project
 
     python setup.py install
 
-Tested on OSX 10.13 and Ubuntu 16.04 with Python 2.7
+Tested on OSX 10.13 and Ubuntu 16.04 with Python 3.7
 
 ## Usage
 
@@ -32,11 +32,11 @@ To run the program with progress and timing comparisons
 
     python main.py -v
 
-Additional command line arguments are as follows
+Additional command line arguments
 
     usage: main.py [-h] [--epsilon EPSILON] [--noise NOISE] [--dim DIM]
-               [--prime PRIME] [--function {double,circle}] [--thresh THRESH]
-               [--uniform] [--n N] [--verbose] [--cohomology]
+                   [--prime PRIME] [--function {circle,double}] [--thresh THRESH]
+                   [--uniform] [--n N] [--verbose] [--plot] [--cohomology]
 
     sparse rips (co)homology
 
@@ -49,11 +49,12 @@ Additional command line arguments are as follows
       --dim DIM, -d DIM     max rips dimension. default: 2
       --prime PRIME, -p PRIME
                             prime (co)homology coefficient. default: 2
-      --function {double,circle}, -f {double,circle}
+      --function {circle,double}, -f {circle,double}
                             shape. default: double
       --thresh THRESH, -t THRESH
                             rips cutoff. default: 2.828
       --uniform, -u         uniformly sample shape. default: False
-      --n N, -n N           number of points. default: 100
-      --verbose, -v         verbose output. default: 0
+      --n N, -n N           number of points. default: 200
+      --verbose, -v         verbose output. default: False
+      --plot                plot diagrams. default: False
       --cohomology, -c      persistent cohomology. default: persistent homology

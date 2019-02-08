@@ -5,9 +5,9 @@ from . import *
 '''  DEFAULTS  '''
 ''''''''''''''''''
 DEF = {'epsilon' : 0.1, 'noise' : 0.2, 'dim' : 2, 'prime' : 2,
-        'n' : 100, 'uniform' : False, 'function' : 'double',
+        'n' : 200, 'uniform' : False, 'function' : 'double',
         'thresh' : 2 * np.sqrt(2), 'verbose' : False,
-        'cohomology' : False}
+        'plot' : False, 'cohomology' : False}
 
 ''''''''''''''''''
 ''' FUNCTIONS  '''
@@ -35,6 +35,8 @@ parser.add_argument('--uniform', '-u', action='store_true',
 parser.add_argument('--n', '-n', type=int, default=DEF['n'],
                         help='number of points. default: %d' % DEF['n'])
 parser.add_argument('--verbose', '-v', action='store_true',
-                        help='verbose output. default: %d' % DEF['verbose'])
+                        help='verbose output. default: %s' % str(DEF['verbose']))
+parser.add_argument('--plot', action='store_true',
+                        help='plot diagrams. default: %s' % str(DEF['plot']))
 parser.add_argument('--cohomology', '-c', action='store_true',
                         help='persistent cohomology. default: persistent homology')
