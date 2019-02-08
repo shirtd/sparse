@@ -1,4 +1,4 @@
-from . import *
+from util import *
 
 def test_perm(G):
     for i, x in enumerate(G.P):
