@@ -3,3 +3,4 @@
 build
 dist
 sparse.egg-info
+*__pycache__
