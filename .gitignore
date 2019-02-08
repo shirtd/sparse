@@ -1,2 +1,5 @@
 *.stash
 *.pyc
+build
+dist
+sparse.egg-info
